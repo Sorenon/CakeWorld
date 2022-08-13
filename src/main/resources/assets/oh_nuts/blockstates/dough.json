@@ -2,18 +2,18 @@
   "variants": {
     "": [
       {
-        "model": "oh_nuts:block/doughnut"
+        "model": "oh_nuts:block/dough"
       },
       {
-        "model": "oh_nuts:block/doughnut",
+        "model": "oh_nuts:block/dough",
         "y": 90
       },
       {
-        "model": "oh_nuts:block/doughnut",
+        "model": "oh_nuts:block/dough",
         "y": 180
       },
       {
-        "model": "oh_nuts:block/doughnut",
+        "model": "oh_nuts:block/dough",
         "y": 270
       }
     ]

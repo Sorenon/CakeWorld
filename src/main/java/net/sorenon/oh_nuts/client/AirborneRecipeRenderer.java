@@ -30,7 +30,7 @@ public class AirborneRecipeRenderer extends EntityRenderer<AirborneRecipeEntity>
 	}
 
 	public void render(AirborneRecipeEntity fallingBlockEntity, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
-		var blockState = OhNutsMod.DOUGH_BLOCK.defaultBlockState();
+		var blockState = fallingBlockEntity.getEntityData().get(AirborneRecipeEntity.RENDER_BLOCK_STATE).orElse(OhNutsMod.DOUGH_BLOCK.defaultBlockState());
 
 
 		if (blockState.getRenderShape() == RenderShape.MODEL) {

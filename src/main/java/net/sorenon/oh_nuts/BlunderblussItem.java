@@ -1,10 +1,12 @@
 package net.sorenon.oh_nuts;
 
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -35,41 +37,49 @@ public class BlunderblussItem extends ProjectileWeaponItem {
 	public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
 		ItemStack itemStack = user.getItemInHand(hand);
 
+		user.playSound(SoundEvents.FIREWORK_ROCKET_BLAST);
+
 		var lookDir = user.getLookAngle();
 		var startPos = user.getEyePosition();
-		var endPos = startPos.add(lookDir.scale(40));
+		var endPos = startPos.add(lookDir.scale(30));
 		var aabb = new AABB(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z).inflate(2);
 
-		double e = 40;
+		double e = 30;
 		Entity entity2 = null;
 		Vec3 vec33 = null;
-		for (Entity entity3 : level.getEntities(user, aabb, entity -> entity.getType() == (EntityType.ITEM))) {
-			AABB aABB2 = entity3.getBoundingBox().inflate(entity3.getPickRadius() +
-					0.25
+		for (Entity iEntity : level.getEntities(user, aabb, entity -> entity.getType() == (OhNutsMod.SLAB_RECIPE_ENTITY_TYPE))) {
+			AABB aABB2 = iEntity.getBoundingBox().inflate(iEntity.getPickRadius() +
+					0.5
+//			0
 			);
 			Optional<Vec3> optional = aABB2.clip(startPos, endPos);
 			if (aABB2.contains(startPos)) {
 				if (e >= 0.0) {
-					entity2 = entity3;
+					entity2 = iEntity;
 					vec33 = (Vec3) optional.orElse(startPos);
 					e = 0.0;
 				}
 			} else if (optional.isPresent()) {
-				if (entity3 instanceof ItemEntity itemEntity) {
-					itemEntity.setItem(new ItemStack(Items.DIAMOND));
-					itemEntity.setDeltaMovement(itemEntity.getDeltaMovement().add(lookDir.scale(0.5f)));
+				if (iEntity instanceof AirborneRecipeEntity airborneRecipeEntity) {
+					if (!level.isClientSide) {
+						((ServerPlayer)user).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+						airborneRecipeEntity.getEntityData().set(AirborneRecipeEntity.RENDER_BLOCK_STATE, Optional.of(OhNutsMod.DOUGHNUT_BLOCK.defaultBlockState()));
+						var v = lookDir.scale(0.15f).add(iEntity.getDeltaMovement().multiply(0.15, 0, 0.15));
+						iEntity.setDeltaMovement(new Vec3(v.x, 0.8f, v.z));
+						iEntity.hasImpulse = true;
+					}
 				}
 
 				Vec3 vec34 = (Vec3) optional.get();
 				double f = startPos.distanceToSqr(vec34);
 				if (f < e || e == 0.0) {
-					if (entity3.getRootVehicle() == user.getRootVehicle()) {
+					if (iEntity.getRootVehicle() == user.getRootVehicle()) {
 						if (e == 0.0) {
-							entity2 = entity3;
+							entity2 = iEntity;
 							vec33 = vec34;
 						}
 					} else {
-						entity2 = entity3;
+						entity2 = iEntity;
 						vec33 = vec34;
 						e = f;
 					}
