@@ -1,4 +1,4 @@
-package net.sorenon.oh_nuts.mixin.client;
+package net.sorenon.oh_nuts.mixin.client.phantom;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.core.BlockPos;

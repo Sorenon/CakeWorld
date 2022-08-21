@@ -1,4 +1,4 @@
-package net.sorenon.oh_nuts.mixin.client;
+package net.sorenon.oh_nuts.mixin.client.phantom;
 
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;

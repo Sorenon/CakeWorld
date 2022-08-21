@@ -4,17 +4,19 @@
   "package": "net.sorenon.oh_nuts.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "BlockGetterMixin",
+    "ChunkMapMixin",
     "MinecraftServerAcc",
     "ServerLevelMixin",
-    "client.RenderChunkMixin"
+    "ServerPlayerMixin",
+    "phantom.BlockGetterMixin",
+    "phantom.BlockStateBaseMixin",
+    "phantom.LayerLightEngineMixin"
   ],
   "client": [
-    "client.ClientChunkCacheMixin",
     "client.ClientPacketListenerAcc",
-    "client.GameRendererMixin",
-    "client.LevelChunkMixin",
-    "client.RenderChunkRegionMixin"
+    "client.phantom.GameRendererMixin",
+    "client.phantom.LevelChunkMixin",
+    "client.phantom.RenderChunkRegionMixin"
   ],
   "injectors": {
     "defaultRequire": 1
