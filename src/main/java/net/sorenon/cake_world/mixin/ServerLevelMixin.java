@@ -24,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static net.sorenon.cake_world.CakeWorldMod.isLayer;
+
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin extends Level {
 
@@ -45,7 +47,7 @@ public abstract class ServerLevelMixin extends Level {
 
 	@Inject(method = "addPlayer", at = @At("HEAD"))
 	void onAddPlayer(ServerPlayer player, CallbackInfo ci) {
-		if (this.dimension() == CakeWorldMod.LAYER && ((ServerPlayerExt) player).getFakePlayer() == null) {
+		if (isLayer(this.dimension()) && ((ServerPlayerExt) player).getFakePlayer() == null) {
 			var fakeplayer = new FakePlayer(this.server, this.server.overworld(), player);
 			new ServerGamePacketListenerImpl(this.server, new FakeConnection(player.connection.connection), fakeplayer);
 

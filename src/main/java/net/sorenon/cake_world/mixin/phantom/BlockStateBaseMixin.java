@@ -21,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.sorenon.cake_world.CakeWorldMod.isLayer;
+
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockStateBaseMixin {
 
@@ -125,7 +127,7 @@ public abstract class BlockStateBaseMixin {
 
 	@Unique
 	private boolean isFunny(BlockGetter blockGetter) {
-		return this.is(CakeWorldMod.SUPER_BLOCK) && blockGetter instanceof Level level && level.dimension() == CakeWorldMod.LAYER;
+		return this.is(CakeWorldMod.SUPER_BLOCK) && blockGetter instanceof Level level && isLayer(level.dimension());
 	}
 
 	@Unique

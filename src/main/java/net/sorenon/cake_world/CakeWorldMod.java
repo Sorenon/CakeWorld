@@ -1,6 +1,7 @@
 package net.sorenon.cake_world;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.Holder;
@@ -11,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.progress.LoggerChunkProgressListener;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
@@ -22,7 +22,6 @@ import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.storage.DerivedLevelData;
-import net.sorenon.cake_world.fake_player.FakeConnection;
 import net.sorenon.cake_world.fake_player.FakePlayer;
 import net.sorenon.cake_world.mixin.MinecraftServerAcc;
 import org.quiltmc.loader.api.ModContainer;
@@ -34,23 +33,27 @@ import org.slf4j.LoggerFactory;
 
 import java.util.OptionalLong;
 
+import static net.minecraft.resources.ResourceLocation.validPathChar;
+
 public class CakeWorldMod implements ModInitializer {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger("CakeWorld");
 
-	public static final ResourceKey<Level> LAYER = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("cake_world", "layer"));
+	public static String MODID = "cake_world";
+
+	public static final ResourceKey<Level> LAYER = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(MODID, "layer"));
 
 	public static final SuperBlock SUPER_BLOCK = new SuperBlock();
 	public static final EntityType<FakePlayer> FAKE_PLAYER_ENTITY_TYPE = FabricEntityTypeBuilder.<FakePlayer>create().trackRangeChunks(0).disableSummon().disableSaving().build();
 
-	private final ResourceKey<DimensionType> LAYER_DIMENSION_TYPE = ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, new ResourceLocation("cake_world", "layer"));
+	private final ResourceKey<DimensionType> LAYER_DIMENSION_TYPE = ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, new ResourceLocation(MODID, "layer"));
 	private final Holder<DimensionType> LAYER_DIM_HOLDER = BuiltinRegistries.DIMENSION_TYPE.getOrCreateHolderOrThrow(LAYER_DIMENSION_TYPE);
 
 	@Override
 	public void onInitialize(ModContainer mod) {
-		Registry.register(Registry.BLOCK, new ResourceLocation("cake_world", "super"), SUPER_BLOCK);
-		Registry.register(Registry.ENTITY_TYPE, new ResourceLocation("cake_world", "fake_player"), FAKE_PLAYER_ENTITY_TYPE);
-		Registry.register(Registry.ITEM, new ResourceLocation("cake_world", "space_knife"), new SpaceKnifeItem());
+		Registry.register(Registry.BLOCK, new ResourceLocation(MODID, "super"), SUPER_BLOCK);
+		Registry.register(Registry.ENTITY_TYPE, new ResourceLocation(MODID, "fake_player"), FAKE_PLAYER_ENTITY_TYPE);
+		Registry.register(Registry.ITEM, new ResourceLocation(MODID, "space_knife"), new SpaceKnifeItem());
 
 		BuiltinRegistries.register(
 				BuiltinRegistries.DIMENSION_TYPE,
@@ -78,20 +81,30 @@ public class CakeWorldMod implements ModInitializer {
 			registerDim(server, LAYER);
 		});
 
-//		CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> {
-//			dispatcher.register(Commands.literal("summon_fake_player").executes(context -> {
-//				var player = context.getSource().getPlayer();
-//				if (player != null) {
-//					var fakeplayer = new FakePlayer(player.server, player.server.overworld(), player);
-//					new ServerGamePacketListenerImpl(player.server, new FakeConnection(player.connection.connection), fakeplayer);
-//					player.server.overworld().addFreshEntity(fakeplayer);
-//
-//					return 1;
-//				}
-//
-//				return 0;
-//			}));
-//		});
+		CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> {
+			dispatcher.register(Commands.literal("create_layer_world").requires(source -> source.hasPermission(2))
+					.then(Commands.argument("name", StringArgumentType.word()).executes(context -> {
+						var str = StringArgumentType.getString(context, "name");
+						if (isValidPath(str)) {
+							var id = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(MODID, str));
+							if (context.getSource().getServer().getLevel(id) != null) return 0;
+							registerDim(context.getSource().getServer(), id);
+							return 1;
+						}
+
+						return 0;
+					})));
+		});
+	}
+
+	private static boolean isValidPath(String path) {
+		for (int i = 0; i < path.length(); ++i) {
+			if (!validPathChar(path.charAt(i))) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public void registerDim(MinecraftServer server, ResourceKey<Level> key) {
@@ -118,5 +131,9 @@ public class CakeWorldMod implements ModInitializer {
 		overworld.getWorldBorder().addListener(new BorderChangeListener.DelegateBorderChangeListener(newLevel.getWorldBorder()));
 
 		acc.getLevels().put(key, newLevel);
+	}
+
+	public static boolean isLayer(ResourceKey<Level> key) {
+		return key.location().getNamespace().equals(MODID);
 	}
 }
