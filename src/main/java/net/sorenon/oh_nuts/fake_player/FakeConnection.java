@@ -39,7 +39,7 @@ public class FakeConnection extends Connection {
 		if (PACKETS.contains(packet.getClass())) {
 			var buf = PacketByteBufs.create();
 			WrappedPacket.encode(packet, buf);
-			this.parent.send(ServerPlayNetworking.createS2CPacket(OhNutsClient.C2S_WRAPPED_PACKET, buf), listener);
+			this.parent.send(ServerPlayNetworking.createS2CPacket(OhNutsClient.S2C_WRAPPED_PACKET, buf), listener);
 		}
 	}
 

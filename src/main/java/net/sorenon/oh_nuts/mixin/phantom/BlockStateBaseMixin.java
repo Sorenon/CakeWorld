@@ -3,6 +3,7 @@ package net.sorenon.oh_nuts.mixin.phantom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -12,6 +13,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.sorenon.oh_nuts.OhNutsMod;
 import net.sorenon.oh_nuts.client.OhNutsClient;
+import net.sorenon.oh_nuts.mixin.UseOnContextAcc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -97,6 +99,19 @@ public abstract class BlockStateBaseMixin {
 		if (isFunny(world)) {
 			var level = getLevel(world);
 			cir.setReturnValue(level.getBlockState(pos).isFaceSturdy(level, pos, direction, shapeType));
+		}
+	}
+
+	@Inject(method = "canBeReplaced(Lnet/minecraft/world/item/context/BlockPlaceContext;)Z", at = @At("HEAD"), cancellable = true)
+	public void overrideCanBeReplaced(BlockPlaceContext context, CallbackInfoReturnable<Boolean> cir) {
+		var world = context.getLevel();
+		var pos = context.getClickedPos();
+		if (isFunny(world)) {
+			var level = getLevel(world);
+			var player = context.getPlayer();
+			player.level = level;
+			cir.setReturnValue(level.getBlockState(pos).canBeReplaced(new BlockPlaceContext(context.getPlayer(), context.getHand(), context.getItemInHand(), ((UseOnContextAcc)context).getHitResult())));
+			player.level = world;
 		}
 	}
 

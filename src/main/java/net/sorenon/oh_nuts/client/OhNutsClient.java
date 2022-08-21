@@ -21,6 +21,7 @@ import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public class OhNutsClient implements ClientModInitializer {
@@ -31,8 +32,8 @@ public class OhNutsClient implements ClientModInitializer {
 	private static ClientPacketListener rootPl = null;
 
 
-	public static ResourceLocation C2S_WRAPPED_PACKET = new ResourceLocation("layer", "wrapped");
-	public static ResourceLocation C2S_ADD_FAKE_PLAYER = new ResourceLocation("layer", "player");
+	public static ResourceLocation S2C_WRAPPED_PACKET = new ResourceLocation("layer", "wrapped");
+	public static ResourceLocation S2C_CLEANUP = new ResourceLocation("layer", "cleanup");
 
 	public static ImmutableSet<Class<?>> BLACKLIST = ImmutableSet.of(
 			ClientboundCustomPayloadPacket.class
@@ -40,15 +41,20 @@ public class OhNutsClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient(ModContainer mod) {
-//		ClientPlayNetworking.registerGlobalReceiver(C2S_ADD_FAKE_PLAYER, (client, handler, buf, responseSender) -> {
-//
-//
-//			client.execute(() -> {
-//				initFake((ClientPacketListenerAcc) handler, client);
-//			});
-//		});
+		ClientPlayNetworking.registerGlobalReceiver(S2C_CLEANUP, (client, handler, buf, responseSender) -> {
+			client.execute(() -> {
+				try {
+					rootWorld.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					rootWorld = null;
+					rootPl = null;
+				}
+			});
+		});
 
-		ClientPlayNetworking.registerGlobalReceiver(C2S_WRAPPED_PACKET, (client, handler, buf, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(S2C_WRAPPED_PACKET, (client, handler, buf, responseSender) -> {
 			var packet = WrappedPacket.decode(buf);
 			System.out.println(packet);
 

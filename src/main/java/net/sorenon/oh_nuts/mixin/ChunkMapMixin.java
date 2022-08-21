@@ -33,14 +33,16 @@ public abstract class ChunkMapMixin {
 						 MutableObject<ClientboundLevelChunkWithLightPacket> mutableObject,
 						 LevelChunk chunk, CallbackInfo ci) {
 		if (player instanceof FakePlayer && EVIL.get()) ci.cancel();
-
+//Chatsby13
 		if (!(player instanceof FakePlayer)) {
 			ServerPlayerExt ext = (ServerPlayerExt) player;
 			var fakePlayer = ext.getFakePlayer();
 			if (fakePlayer == null) return;
 
 			EVIL.set(false);
-			((ChunkMapMixin)(Object)((ServerChunkCache)fakePlayer.level.getChunkSource()).chunkMap).playerLoadedChunk(fakePlayer, mutableObject, fakePlayer.level.getChunk(chunk.getPos().x, chunk.getPos().z));
+			MutableObject<ClientboundLevelChunkWithLightPacket> mutableObject2 = new MutableObject<>();
+
+			((ChunkMapMixin)(Object)((ServerChunkCache)fakePlayer.level.getChunkSource()).chunkMap).playerLoadedChunk(fakePlayer, mutableObject2, fakePlayer.level.getChunk(chunk.getPos().x, chunk.getPos().z));
 			EVIL.set(true);
 		}
 

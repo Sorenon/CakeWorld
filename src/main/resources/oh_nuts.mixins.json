@@ -6,8 +6,10 @@
   "mixins": [
     "ChunkMapMixin",
     "MinecraftServerAcc",
+    "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
+    "UseOnContextAcc",
     "phantom.BlockGetterMixin",
     "phantom.BlockStateBaseMixin",
     "phantom.LayerLightEngineMixin"
