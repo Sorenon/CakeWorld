@@ -2,25 +2,20 @@
 	"schema_version": 1,
 	"quilt_loader": {
 		"group": "net.sorenon",
-		"id": "oh_nuts",
+		"id": "cake_world",
 		"version": "${version}",
 		"metadata": {
-			"name": "Oh Nuts",
-			"description": "Swedish baking",
+			"name": "Cake World",
+			"description": "A cake can have layers and so can the Overworld",
 			"contributors": {
 				"Sorenon": "Owner"
 			},
-			"contact": {
-				"homepage": "https://example.com/",
-				"issues": "https://github.com/QuiltMC/quilt-template-mod/issues",
-				"sources": "https://github.com/QuiltMC/quilt-template-mod"
-			},
-			"icon": "assets/example_mod/icon.png"
+			"icon": "assets/cake_world/icon.png"
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
-			"init": "net.sorenon.oh_nuts.OhNutsMod",
-			"client_init": "net.sorenon.oh_nuts.client.OhNutsClient"
+			"init": "net.sorenon.cake_world.CakeWorldMod",
+			"client_init": "net.sorenon.cake_world.client.CakeWorldClient"
 		},
 		"depends": [
 			{
@@ -37,5 +32,5 @@
 			}
 		]
 	},
-	"mixin": "oh_nuts.mixins.json"
+	"mixin": "cake_world.mixins.json"
 }
