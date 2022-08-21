@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.sorenon.cake_world.CakeWorldMod;
@@ -112,7 +113,7 @@ public abstract class BlockStateBaseMixin {
 			var level = getLevel(world);
 			var player = context.getPlayer();
 			player.level = level;
-			cir.setReturnValue(level.getBlockState(pos).canBeReplaced(new BlockPlaceContext(context.getPlayer(), context.getHand(), context.getItemInHand(), ((UseOnContextAcc)context).getHitResult())));
+			cir.setReturnValue(level.getBlockState(pos).canBeReplaced(new BlockPlaceContext(context.getPlayer(), context.getHand(), context.getItemInHand(), ((UseOnContextAcc) context).getHitResult())));
 			player.level = world;
 		}
 	}
@@ -124,6 +125,17 @@ public abstract class BlockStateBaseMixin {
 ////			cir.setReturnValue(level.getBlockState(pos).getLightBlock(level, pos));
 //		}
 //	}
+
+	@Inject(method = "isPathfindable", at = @At("HEAD"), cancellable = true)
+	void overrideIsPathfindable(BlockGetter world,
+								BlockPos pos,
+								PathComputationType type,
+								CallbackInfoReturnable<Boolean> cir) {
+		if (isFunny(world)) {
+			var level = getLevel(world);
+			cir.setReturnValue(level.getBlockState(pos).isPathfindable(level, pos, type));
+		}
+	}
 
 	@Unique
 	private boolean isFunny(BlockGetter blockGetter) {

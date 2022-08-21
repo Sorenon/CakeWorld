@@ -14,7 +14,9 @@
     "phantom.BlockAndTintGetterMixin",
     "phantom.BlockGetterMixin",
     "phantom.BlockStateBaseMixin",
-    "phantom.LayerLightEngineMixin"
+    "phantom.LayerLightEngineMixin",
+    "phantom.PathNavigationRegionAcc",
+    "phantom.WalkNodeEvalMixin"
   ],
   "client": [
     "client.ClientPacketListenerAcc",
