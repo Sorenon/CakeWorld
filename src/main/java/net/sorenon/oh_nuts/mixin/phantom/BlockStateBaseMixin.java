@@ -115,6 +115,14 @@ public abstract class BlockStateBaseMixin {
 		}
 	}
 
+//	@Inject(method = "getLightBlock", at = @At("HEAD"), cancellable = true)
+//	void overrideGetLightBlock(BlockGetter world, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
+//		if (isFunny(world)) {
+////			var level = getLevel(world);
+////			cir.setReturnValue(level.getBlockState(pos).getLightBlock(level, pos));
+//		}
+//	}
+
 	@Unique
 	private boolean isFunny(BlockGetter blockGetter) {
 		return this.is(OhNutsMod.SUPER_BLOCK) && blockGetter instanceof Level level && level.dimension() == OhNutsMod.LAYER;

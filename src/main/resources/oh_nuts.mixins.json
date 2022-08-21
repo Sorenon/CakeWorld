@@ -10,6 +10,8 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "UseOnContextAcc",
+    "client.phantom.LevelRendererMixin",
+    "phantom.BlockAndTintGetterMixin",
     "phantom.BlockGetterMixin",
     "phantom.BlockStateBaseMixin",
     "phantom.LayerLightEngineMixin"
