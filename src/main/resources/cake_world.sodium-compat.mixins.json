@@ -1,0 +1,15 @@
+{
+  "package": "net.sorenon.cake_world.compat",
+  "plugin": "net.sorenon.cake_world.compat.SodiumPlugin",
+  "required": true,
+  "compatibilityLevel": "JAVA_17",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "conformVisibility": true
+  },
+  "client": [
+    "WorldSliceMixin"
+  ]
+}

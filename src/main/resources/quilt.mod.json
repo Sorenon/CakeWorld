@@ -32,5 +32,8 @@
 			}
 		]
 	},
-	"mixin": "cake_world.mixins.json"
+	"mixin": [
+		"cake_world.mixins.json",
+		"cake_world.sodium-compat.mixins.json"
+	]
 }

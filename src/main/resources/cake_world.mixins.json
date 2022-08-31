@@ -10,7 +10,6 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "UseOnContextAcc",
-    "client.phantom.LevelRendererMixin",
     "phantom.BlockAndTintGetterMixin",
     "phantom.BlockGetterMixin",
     "phantom.BlockStateBaseMixin",
@@ -22,7 +21,8 @@
     "client.ClientPacketListenerAcc",
     "client.phantom.GameRendererMixin",
     "client.phantom.LevelChunkMixin",
-    "client.phantom.RenderChunkRegionMixin"
+    "client.phantom.RenderChunkRegionMixin",
+    "client.phantom.LevelRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
