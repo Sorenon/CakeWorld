@@ -6,6 +6,7 @@ import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.*;
+import net.sorenon.cake_world.CakeWorldMod;
 import net.sorenon.cake_world.WrappedPacket;
 import net.sorenon.cake_world.client.CakeWorldClient;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +40,7 @@ public class FakeConnection extends Connection {
 		if (PACKETS.contains(packet.getClass())) {
 			var buf = PacketByteBufs.create();
 			WrappedPacket.encode(packet, buf);
-			this.parent.send(ServerPlayNetworking.createS2CPacket(CakeWorldClient.S2C_WRAPPED_PACKET, buf), listener);
+			this.parent.send(ServerPlayNetworking.createS2CPacket(CakeWorldMod.S2C_WRAPPED_PACKET, buf), listener);
 		}
 	}
 

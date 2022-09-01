@@ -24,17 +24,18 @@ import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import java.io.IOException;
 import java.util.UUID;
 
+import static net.sorenon.cake_world.CakeWorldMod.S2C_CLEANUP;
+import static net.sorenon.cake_world.CakeWorldMod.S2C_WRAPPED_PACKET;
+
 public class CakeWorldClient implements ClientModInitializer {
 
 	public static boolean isRendering = false;
 
-	public static ClientLevel rootWorld = null;
+	//TODO find out why this cannot be ClientLevel
+	public static Level rootWorld = null;
 	private static ClientPacketListener rootPl = null;
 
-
 	private static boolean needsCleanup = false;
-	public static ResourceLocation S2C_WRAPPED_PACKET = new ResourceLocation("layer", "wrapped");
-	public static ResourceLocation S2C_CLEANUP = new ResourceLocation("layer", "cleanup");
 
 	public static ImmutableSet<Class<?>> BLACKLIST = ImmutableSet.of(
 			ClientboundCustomPayloadPacket.class
@@ -75,7 +76,7 @@ public class CakeWorldClient implements ClientModInitializer {
 				var player = client.player;
 				var level = client.level;
 				client.player = null;
-				client.level = rootWorld;
+				client.level = (ClientLevel) rootWorld;
 
 				genericsFtw(packet, rootPl);
 
@@ -111,6 +112,6 @@ public class CakeWorldClient implements ClientModInitializer {
 				0 //packet.getSeed()
 		);
 
-		((ClientPacketListenerAcc)rootPl).setLevel(rootWorld);
+		((ClientPacketListenerAcc)rootPl).setLevel((ClientLevel) rootWorld);
 	}
 }

@@ -15,6 +15,7 @@ import net.minecraft.server.level.progress.LoggerChunkProgressListener;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.border.BorderChangeListener;
@@ -27,6 +28,7 @@ import net.sorenon.cake_world.mixin.MinecraftServerAcc;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
+import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
 import org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,17 +45,23 @@ public class CakeWorldMod implements ModInitializer {
 
 	public static final ResourceKey<Level> LAYER = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(MODID, "layer"));
 
+	public static ResourceLocation S2C_WRAPPED_PACKET = new ResourceLocation("layer", "wrapped");
+	public static ResourceLocation S2C_CLEANUP = new ResourceLocation("layer", "cleanup");
+
 	public static final SuperBlock SUPER_BLOCK = new SuperBlock();
 	public static final EntityType<FakePlayer> FAKE_PLAYER_ENTITY_TYPE = FabricEntityTypeBuilder.<FakePlayer>create().trackRangeChunks(0).disableSummon().disableSaving().build();
 
 	private final ResourceKey<DimensionType> LAYER_DIMENSION_TYPE = ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, new ResourceLocation(MODID, "layer"));
 	private final Holder<DimensionType> LAYER_DIM_HOLDER = BuiltinRegistries.DIMENSION_TYPE.getOrCreateHolderOrThrow(LAYER_DIMENSION_TYPE);
 
+	public static SpaceKnifeItem knife;
+	public static final QuiltItemGroup group = QuiltItemGroup.builder(new ResourceLocation(MODID, "cake_world")).icon(() -> new ItemStack(knife)).build();
+
 	@Override
 	public void onInitialize(ModContainer mod) {
 		Registry.register(Registry.BLOCK, new ResourceLocation(MODID, "super"), SUPER_BLOCK);
 		Registry.register(Registry.ENTITY_TYPE, new ResourceLocation(MODID, "fake_player"), FAKE_PLAYER_ENTITY_TYPE);
-		Registry.register(Registry.ITEM, new ResourceLocation(MODID, "space_knife"), new SpaceKnifeItem());
+		knife = Registry.register(Registry.ITEM, new ResourceLocation(MODID, "dimensional_blade"), new SpaceKnifeItem());
 
 		BuiltinRegistries.register(
 				BuiltinRegistries.DIMENSION_TYPE,

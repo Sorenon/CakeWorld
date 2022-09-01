@@ -19,7 +19,7 @@ import static net.sorenon.cake_world.CakeWorldMod.isLayer;
 
 public class SpaceKnifeItem extends Item {
 	public SpaceKnifeItem() {
-		super(new Properties().stacksTo(1));
+		super(new Properties().stacksTo(1).tab(CakeWorldMod.group));
 	}
 
 	@Override

@@ -3,8 +3,8 @@ package net.sorenon.cake_world.mixin;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.sorenon.cake_world.CakeWorldMod;
 import net.sorenon.cake_world.ServerPlayerExt;
-import net.sorenon.cake_world.client.CakeWorldClient;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +20,7 @@ public class PlayerMixin {
 		if (this instanceof ServerPlayerExt ext && ext.getFakePlayer() != null) {
 			ext.getFakePlayer().remove(Entity.RemovalReason.DISCARDED);
 			ext.setFakePlayer(null);
-			ServerPlayNetworking.send((ServerPlayer)ext, CakeWorldClient.S2C_CLEANUP, PacketByteBufs.empty());
+			ServerPlayNetworking.send((ServerPlayer)ext, CakeWorldMod.S2C_CLEANUP, PacketByteBufs.empty());
 		}
 	}
 }
