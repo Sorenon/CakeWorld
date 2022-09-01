@@ -22,4 +22,9 @@ public class SuperBlock extends Block {
 	public int getLightBlock(BlockState state, BlockGetter world, BlockPos pos) {
 		return 0;
 	}
+
+	@Override
+	public boolean hasDynamicShape() {
+		return true;
+	}
 }

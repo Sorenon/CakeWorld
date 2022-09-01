@@ -34,7 +34,7 @@ public abstract class BlockStateBaseMixin {
 	void overrideCollisionShape(BlockGetter world,
 								BlockPos pos,
 								CallbackInfoReturnable<VoxelShape> cir) {
-		if (isFunny(world)) {
+		if (hasParent(world)) {
 			var level = getLevel(world);
 			cir.setReturnValue(level.getBlockState(pos).getCollisionShape(level, pos));
 		}
@@ -45,7 +45,7 @@ public abstract class BlockStateBaseMixin {
 								BlockPos pos,
 								CollisionContext context,
 								CallbackInfoReturnable<VoxelShape> cir) {
-		if (isFunny(world)) {
+		if (hasParent(world)) {
 			var level = getLevel(world);
 			cir.setReturnValue(level.getBlockState(pos).getCollisionShape(level, pos, context));
 		}
@@ -56,7 +56,7 @@ public abstract class BlockStateBaseMixin {
 							 BlockPos pos,
 							 CollisionContext context,
 							 CallbackInfoReturnable<VoxelShape> cir) {
-		if (isFunny(world)) {
+		if (hasParent(world)) {
 			var level = getLevel(world);
 			cir.setReturnValue(level.getBlockState(pos).getVisualShape(level, pos, context));
 		}
@@ -67,7 +67,7 @@ public abstract class BlockStateBaseMixin {
 					   BlockPos pos,
 					   CollisionContext context,
 					   CallbackInfoReturnable<VoxelShape> cir) {
-		if (isFunny(world)) {
+		if (hasParent(world)) {
 			var level = getLevel(world);
 			cir.setReturnValue(level.getBlockState(pos).getShape(level, pos, context));
 		}
@@ -77,7 +77,7 @@ public abstract class BlockStateBaseMixin {
 	public void overrideIsCollisionShapeFullBlock(BlockGetter world,
 												  BlockPos pos,
 												  CallbackInfoReturnable<Boolean> cir) {
-		if (isFunny(world)) {
+		if (hasParent(world)) {
 			var level = getLevel(world);
 			cir.setReturnValue(level.getBlockState(pos).isCollisionShapeFullBlock(level, pos));
 		}
@@ -87,7 +87,7 @@ public abstract class BlockStateBaseMixin {
 	public void overrideIsViewBlocking(BlockGetter world,
 									   BlockPos pos,
 									   CallbackInfoReturnable<Boolean> cir) {
-		if (isFunny(world)) {
+		if (hasParent(world)) {
 			var level = getLevel(world);
 			cir.setReturnValue(level.getBlockState(pos).isViewBlocking(level, pos));
 		}
@@ -99,7 +99,7 @@ public abstract class BlockStateBaseMixin {
 									 Direction direction,
 									 SupportType shapeType,
 									 CallbackInfoReturnable<Boolean> cir) {
-		if (isFunny(world)) {
+		if (hasParent(world)) {
 			var level = getLevel(world);
 			cir.setReturnValue(level.getBlockState(pos).isFaceSturdy(level, pos, direction, shapeType));
 		}
@@ -109,7 +109,7 @@ public abstract class BlockStateBaseMixin {
 	public void overrideCanBeReplaced(BlockPlaceContext context, CallbackInfoReturnable<Boolean> cir) {
 		var world = context.getLevel();
 		var pos = context.getClickedPos();
-		if (isFunny(world)) {
+		if (hasParent(world)) {
 			var level = getLevel(world);
 			var player = context.getPlayer();
 			player.level = level;
@@ -131,14 +131,14 @@ public abstract class BlockStateBaseMixin {
 								BlockPos pos,
 								PathComputationType type,
 								CallbackInfoReturnable<Boolean> cir) {
-		if (isFunny(world)) {
+		if (hasParent(world)) {
 			var level = getLevel(world);
 			cir.setReturnValue(level.getBlockState(pos).isPathfindable(level, pos, type));
 		}
 	}
 
 	@Unique
-	private boolean isFunny(BlockGetter blockGetter) {
+	private boolean hasParent(BlockGetter blockGetter) {
 		return this.is(CakeWorldMod.SUPER_BLOCK) && blockGetter instanceof Level level && isLayer(level.dimension());
 	}
 
