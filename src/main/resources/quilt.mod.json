@@ -10,6 +10,11 @@
 			"contributors": {
 				"Sorenon": "Owner"
 			},
+			"contact": {
+				"homepage": "https://modrinth.com/mod/cake-world",
+				"issues": "https://github.com/Sorenon/CakeWorld/issues",
+				"sources": "https://github.com/Sorenon/CakeWorld"
+			},
 			"icon": "assets/cake_world/icon.png"
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
