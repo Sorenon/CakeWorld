@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -112,9 +113,21 @@ public abstract class BlockStateBaseMixin {
 		if (hasParent(world)) {
 			var level = getLevel(world);
 			var player = context.getPlayer();
-			player.level = level;
-			cir.setReturnValue(level.getBlockState(pos).canBeReplaced(new BlockPlaceContext(context.getPlayer(), context.getHand(), context.getItemInHand(), ((UseOnContextAcc) context).getHitResult())));
-			player.level = world;
+			var hitResult = ((UseOnContextAcc) context).getHitResult();
+			if (player != null) {
+				player.level = level;
+				cir.setReturnValue(level.getBlockState(pos).canBeReplaced(new BlockPlaceContext(context.getPlayer(), context.getHand(), context.getItemInHand(), ((UseOnContextAcc) context).getHitResult())));
+				player.level = world;
+			} else {
+				cir.setReturnValue(level.getBlockState(pos).canBeReplaced(new DirectionalPlaceContext(
+						level,
+						hitResult.getBlockPos(),
+						//TODO get the actual direction from DirectionalPlaceContext
+						hitResult.getDirection().getOpposite(),
+						context.getItemInHand(),
+						hitResult.getDirection()
+				)));
+			}
 		}
 	}
 
